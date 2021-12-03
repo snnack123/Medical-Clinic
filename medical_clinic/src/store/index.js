@@ -1,64 +1,69 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
 
 export default createStore({
-    state: {
-        isAuthenticated: false,
-        client: {},
-        doctors: [],
-        my_doctor: {},
-        all_appointments: {},
+  state: {
+    products: [],
+    isAuthenticated: false,
+  },
+  getters: {
+    products: state => {
+      return state.products;
+    }
+  },
+  mutations: {
+    SET_PRODUCTS: (state, products) => {
+      state.products = products;
     },
-    mutations: {
-        SET_AUTH: (state, status) => {
-            state.isAuthenticated = status;
-        },
-        CHECK_AUTHENTICATED: (state) => {
-            if (window.localStorage.getItem("token")) {
-                state.isAuthenticated = true;
+    SET_AUTH: (state, status) => {
+      state.isAuthenticated = status;
+    },
+    ADD_PRODUCT: (state, product) => {
+      state.products.push(product);
+    },
+    DELETE_PRODUCT: (state, id) => {
+      state.products = state.products.filter(element => element.id !== id);
+    },
+    EDIT_PRODUCT: (state, product) => {
+      state.products = state.products.map(element => {       
+         if(element.id === product.id) {       
+          if( element.name !== product.name )    
+            element.name = product.name;
+          if( element.status !== product.status ) {
+            if (product.status === true) {
+              element.status = true;
+            } else {
+              element.status = false;
             }
-        },
-        SET_EMAIL: (state, status) => {
-            state.client.email = status;
-        },
-        SET_CLIENT: (state, status) => {
-            state.client.name = status.name;
-            state.client.phone = status.phone;
-            state.client.yearsOld = status.yearsOld;
-        },
-        SET_DOCTORS: (state, status) => {
-            state.doctors = status;
-        },
-        SET_MY_DOCTOR: (state, status) => {
-            state.my_doctor.name = status.name;
-            state.my_doctor.specialization = status.specialization;
-        },
-        SET_ALL_APPOINTMENTS: (state, status) => {
-            while (state.all_appointments.length) state.all_appointments.pop();
-            state.all_appointments = status;
-        },
+          }           
+         }
+         return element;
+      })
+    },CHECK_AUTHENTICATED: (state) => {
+      if(window.localStorage.getItem('token')){
+        state.isAuthenticated = true;
+      }
+    }
+  },
+  actions: {
+    fetchProducts: ({ commit }, payload) => {
+      commit('SET_PRODUCTS', payload);
     },
-    actions: {
-        login: ({ commit }, payload) => {
-            commit("SET_AUTH", payload);
-        },
-        checkAuthenticated: ({ commit }) => {
-            commit("CHECK_AUTHENTICATED");
-        },
-        setEmailClient: ({ commit }, payload) => {
-            commit("SET_EMAIL", payload);
-        },
-        setClient: ({ commit }, payload) => {
-            commit("SET_CLIENT", payload);
-        },
-        setDoctors: ({ commit }, payload) => {
-            commit("SET_DOCTORS", payload);
-        },
-        setMyDoctor: ({ commit }, payload) => {
-            commit("SET_MY_DOCTOR", payload);
-        },
-        setAllAppointments: ({ commit }, payload) => {
-            commit("SET_ALL_APPOINTMENTS", payload);
-        },
+    login: ({ commit }, payload) => {
+      commit('SET_AUTH', payload);
     },
-    modules: {},
-});
+    addProduct: ({ commit }, payload) => {
+      commit('ADD_PRODUCT', payload);
+    },
+    deleteProduct: ({ commit }, payload) => {
+      commit('DELETE_PRODUCT', payload);
+    },
+    editProduct: ({commit}, payload) => {
+      commit('EDIT_PRODUCT', payload);
+    },
+    checkAuthenticated: ({commit}) => {
+      commit('CHECK_AUTHENTICATED');
+    }
+  },
+  modules: {
+  }
+})
