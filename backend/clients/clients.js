@@ -90,7 +90,6 @@ router.post("/getAppointmentsOnDate", checkAuthorization, async(req, res) => {
         .where("doctorSpecialization", "==", req.body.specialization)
         .get();
 
-    let nr = 0;
     posts.forEach((doc) => {
         let app = {};
 
@@ -110,7 +109,7 @@ router.post("/getAppointmentsOnDate", checkAuthorization, async(req, res) => {
 router.get("/getAllAppointments", checkAuthorization, async(req, res) => {
     let appointments_list = [];
 
-    const posts = await db.collection("Appointments").get();
+    const posts = await db.collection("Appointments").orderBy('date').get();
 
     posts.forEach((doc) => {
         let app = {};
@@ -118,8 +117,33 @@ router.get("/getAllAppointments", checkAuthorization, async(req, res) => {
         app.id = doc.id;
         app.doctorName = doc.data().doctorName;
         app.doctorSpecialization = doc.data().doctorSpecialization;
+        app.pacientName = doc.data().pacientName;
+        app.pacientYearsOld = doc.data().pacientYearsOld;
         app.date = doc.data().date;
         app.hour = doc.data().hour;
+        app.price = doc.data().price;
+
+        appointments_list.push(app);
+    });
+    res.json(appointments_list);
+});
+
+router.get("/getAllAppointmentsWithoutToken", async(req, res) => {
+    let appointments_list = [];
+
+    const posts = await db.collection("Appointments").orderBy('date').get();
+
+    posts.forEach((doc) => {
+        let app = {};
+
+        app.id = doc.id;
+        app.doctorName = doc.data().doctorName;
+        app.doctorSpecialization = doc.data().doctorSpecialization;
+        app.pacientName = doc.data().pacientName;
+        app.pacientYearsOld = doc.data().pacientYearsOld;
+        app.date = doc.data().date;
+        app.hour = doc.data().hour;
+        app.price = doc.data().price;
 
         appointments_list.push(app);
     });
@@ -151,5 +175,28 @@ router.post("/new_appointment", checkAuthorization, async(req, res) => {
     const insert = await db.collection("Appointments").add(app);
     res.json({ id: insert.id });
 });
+
+router.put('/edit_appointment/:id', checkAuthorization, async(req, res) => {
+    console.log('Vrei sa actualizezi produsul cu id-ul: ' + req.params.id);
+
+    const response = await db.collection("Appointments").doc(req.params.id).update(req.body);
+
+    res.json({ 'message': 'Am modificat programarea cu id-ul ' + req.body.id + ' de pe server!' });
+})
+
+router.put('/edit_client/:id', checkAuthorization, async(req, res) => {
+    console.log('Vrei sa actualizezi clientul cu id-ul: ' + req.params.id);
+
+    const response = await db.collection("Clients").doc(req.params.id).update(req.body);
+
+    res.json({ 'message': 'Am modificat clientul cu id-ul ' + req.body.id + ' de pe server!' });
+})
+
+router.delete('/deleteApp/:id', checkAuthorization, (req, res) => {
+    console.log('Vrei sa stergi programarea cu id-ul: ' + req.params.id);
+    let id = req.params.id;
+    const product = db.collection('Appointments').doc(id).delete();
+    res.json({ 'message': 'Am sters programarea cu id ul' + req.params.id + ' de pe server!' });
+})
 
 module.exports = router;
