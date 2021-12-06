@@ -1,6 +1,6 @@
 <template>
   <div> 
-    <br /><br />
+    <br /><br /><br /><br /><br />
     <h1 style="text-align:center">Istoric Programari</h1>
     <br /><br />
     <div class="table-wrapper"  style="width: 100px;">

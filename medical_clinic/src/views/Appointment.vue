@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <br /><br />
-    <h1>Creeaza o noua programare</h1>
+  <div style='margin-left: 30px;'>
+    <br /><br /><br /><br /><br />
+    <h1 style='text-align: center;text-transform: uppercase;'>Creeaza o noua programare</h1>
     <br /><br /><br /><br />
     <form>
       <h2>Alegeti o specializare</h2>

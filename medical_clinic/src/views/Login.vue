@@ -2,8 +2,10 @@
   <div>
     <form @submit.prevent="login()" class="box">
       <h1>Login</h1>
+      <br /> <br />
       <input v-model="email" type="text" placeholder="Email" />
       <input v-model="password" type="password" placeholder="password" />
+      <br /> <br />
       <button type="submit">Login</button>
     </form>
     <div>
@@ -64,7 +66,7 @@ body{
   background: #34495e;
 }
 .box{
-  width: 400px;
+  width: 600px;
   padding: 40px;
   position: absolute;
   top: 50%;
@@ -86,7 +88,7 @@ body{
   text-align: center;
   border: 2px solid #3498db;
   padding: 14px 10px;
-  width: 200px;
+  width: 400px;
   outline: none;
   color: white;
   border-radius: 24px;
@@ -113,5 +115,28 @@ body{
 .box button[type = "submit"]:hover{
   background: #2ecc71;
 }
+
+
+@media only screen and (max-width: 1200px) {
+  .box {
+    font-size: 80%;
+    width: 550px;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .box {
+    font-size: 70%;
+    width: 500px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .box {
+    font-size: 60%;
+    width: 480px;
+  }
+}
+
 
 </style>
