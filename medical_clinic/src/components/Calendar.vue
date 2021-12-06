@@ -71,7 +71,6 @@
 </template>
 
 <script>
-import utils from "../utils";
 
 export default {
   name: "Calendar",
@@ -140,7 +139,6 @@ export default {
           if(my_div.classList.contains('fullDay')) {
             my_div.classList.remove('fullDay')
           }
-        console.log(my_div)
         if (suma < 3) {
           my_div.classList.add("canBeAdded");
         } else if (suma == 3) {
@@ -149,7 +147,7 @@ export default {
           my_div.classList.add("fullDay");
         }
       }
-      this.$emit("spec_appointments_list", spec_appointments);
+      this.$emit("spec_appointments_list", spec_appointments.sort((a,b) => (a.hour > b.hour) ? 1 : ((b.hour > a.hour) ? -1 : 0)));
     }
   },
   methods: {
@@ -189,7 +187,6 @@ export default {
       this.new_Days();
     },
     new_Days() {
-      console.log("new_days");
 
       const date = new Date(this.current_date);
       date.setDate(1);
@@ -368,14 +365,6 @@ export default {
     for (let j = 1; j <= nextDays; j++) {
       this.next_days.push("next_" + j);
     }
-    let url = utils.url;
-
-    let token = window.localStorage.getItem("token");
-    let requestParam = { ...utils.globalRequestParameters };
-    requestParam.headers.Authorization = "Bearer " + token;
-    fetch(url + "getAllAppointments", requestParam).then((res) =>
-      res.json().then((res) => this.$store.dispatch("setAllAppointments", res))
-    );
   },
 };
 </script>
@@ -386,10 +375,6 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
-}
-
-html {
-  font-size: 62.5%;
 }
 
 .container {
